@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>InfoShards</title>
+		<script defer src="/__/firebase/10.9.0/firebase-app-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-auth-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-functions-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-analytics-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-performance-compat.js"></script>
+		<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+		<script src="/js/main.js"></script>
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="/css/styles.css" />
+	</head>
+	<body>
+		<nav class="flex-nav">
+			<div class="nav-item" onclick="location.href = '/';">InfoShards</div>
+		</nav>
+		<div class="flex-container">
+			<div id="alert" class="flex-content">
+				<h3>Welcome! <span class="closeable" onclick="closeAlert()">X</span></h3>
+				<p>
+					With a commitment to transparency and accessibility, we provide a wealth of publicly available data
+					alongside intuitive online tools, enabling users to unlock actionable intelligence effortlessly.
+				</p>
+			</div>
+			<div class="flex-content animated-fade-in">
+				<h3 style="text-align: center">Search for Shards</h3>
+				<div class="shard-content">
+					<form id="search" class="search-container" action="/search">
+						<input type="text" name="query" class="search-input" />
+						<input type="submit" value="Go" class="search-button" />
+					</form>
+				</div>
+			</div>
+			<div class="flex-content animated-fade-in">
+				<h3 style="text-align: center">Explore Popular Shards</h3>
+				<div class="shard-content">
+					<div class="shard-tile" onclick="gotoShard('/census/geocodes/counties')">U.S. County Codes</div>
+					<div class="shard-tile" onclick="gotoShard('/census/geocodes/county-subdivisions')">
+						U.S. County Subdivisions
+					</div>
+					<div class="shard-tile" onclick="gotoShard('/census/geocodes/school-districts')">
+						U.S. School Districts
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				firebase.analytics();
+				firebase.analytics().logEvent("Visited the home page!");
+			});
+		</script>
+	</body>
+</html>

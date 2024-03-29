@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>InfoShards</title>
+		<script defer src="/__/firebase/10.9.0/firebase-app-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-auth-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-functions-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-analytics-compat.js"></script>
+		<script defer src="/__/firebase/10.9.0/firebase-performance-compat.js"></script>
+		<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+		<script src="/js/main.js"></script>
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="/css/styles.css" />
+	</head>
+	<body>
+		<nav class="flex-nav">
+			<div class="nav-item" onclick="location.href = '/';">InfoShards</div>
+		</nav>
+		<div class="flex-container">
+			<div class="flex-content">
+				<h3>U.S. County Subdivision Codes</h3>
+				<p>
+					This shard is sourced from <a href="https://census.gov/" target="_blank">Census.gov</a> and contains
+					2020 Census codes for county subdivisions. The data is sorted by state FIPS code, by county FIPS
+					code, and then by county subdivision FIPS code. More information and documentation on this dataset
+					can be found
+					<a href="https://www.census.gov/library/reference/code-lists/ansi.html#cousub" target="_blank"
+						>here</a
+					>.
+				</p>
+			</div>
+			<div class="flex-content animated-fade-in">
+				<h3 style="text-align: center">Actions</h3>
+				<div class="shard-content">
+					<div class="shard-tile action-tile" onclick="openRawShard('/census/geocodes/county-subdivisions')">
+						View Data
+					</div>
+					<div class="shard-tile action-tile" onclick="downloadShard('/census/geocodes/county-subdivisions')">
+						Download Data
+					</div>
+					<div class="shard-tile action-tile" onclick="copyShard('/census/geocodes/county-subdivisions')">
+						Copy Data URL
+					</div>
+				</div>
+			</div>
+			<div class="flex-content animated-fade-in">
+				<h3 style="text-align: center">Search for Shards</h3>
+				<div class="shard-content">
+					<form id="search" class="search-container" action="/search">
+						<input type="text" name="query" class="search-input" />
+						<input type="submit" value="Go" class="search-button" />
+					</form>
+				</div>
+			</div>
+		</div>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				firebase.analytics();
+				firebase.analytics().logEvent("Visited a Shard! (/census/geocodes/county-subdivisions)");
+			});
+			const downloadShard = (link) => {
+				firebase
+					.functions()
+					.httpsCallable("get_data")({ link })
+					.then((result) => {
+						const blob = new Blob([result.data], { type: "application/json" });
+						const tmploc = URL.createObjectURL(blob);
+						const a = document.createElement("a");
+						a.href = tmploc;
+						a.download = "county-subdivisions.json";
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+						return Promise.resolve(tmploc);
+					})
+					.then((tmploc) => {
+						URL.revokeObjectURL(tmploc);
+					})
+					.catch((error) => {
+						window.alert(`Unable to download data... ${error}`);
+					});
+			};
+		</script>
+	</body>
+</html>
